@@ -1,0 +1,60 @@
+openapi: 3.0.3
+info:
+  title: Payments Service API (External)
+  description: Downstream API to create a payment session with a gateway.
+  version: 1.0.0
+paths:
+  /sessions:
+    post:
+      summary: Initialize a payment gateway session
+      operationId: createGatewaySession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GatewaySessionRequest'
+      responses:
+        '201':
+          description: Gateway session created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewaySessionResponse'
+        '400':
+          description: Invalid card format details.
+components:
+  schemas:
+    GatewaySessionRequest:
+      type: object
+      required:
+        - card_number
+        - expiration_month
+        - expiration_year
+        - cvv
+        - cardholder_name
+      properties:
+        card_number:
+          type: string
+        expiration_month:
+          type: string
+        expiration_year:
+          type: string
+        cvv:
+          type: string
+        cardholder_name:
+          type: string
+    GatewaySessionResponse:
+      type: object
+      required:
+        - session_id
+        - status
+        - expires_at
+      properties:
+        session_id:
+          type: string
+        status:
+          type: string
+        expires_at:
+          type: string
+          format: date-time

@@ -1,0 +1,122 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.openapi.generator' version '7.1.0'
+    id 'idea'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+java {
+    sourceCompatibility = '21'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Ensure generated sources are parsed during compile
+sourceSets {
+    main {
+        java {
+            srcDirs += ["$buildDir/generated-sources/openapi/src/main/java"]
+        }
+    }
+
+    // Fast Unit tests (Domain & Application)
+    test {
+        java { srcDirs = ['src/test/java'] }
+    }
+
+    // Slow Integration tests (Controllers, WebClient HTTP adapters, WireMock)
+    integrationTest {
+        java { srcDirs = ['src/integrationTest/java'] }
+        resources { srcDirs = ['src/integrationTest/resources'] }
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+    }
+
+    // Architecture compliance tests (ArchUnit)
+    architectureTest {
+        java { srcDirs = ['src/architectureTest/java'] }
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+// Ensure IntelliJ IDEA automatically detects and indexes generated sources
+idea {
+    module {
+        generatedSourceDirs += file("$buildDir/generated-sources/openapi/src/main/java")
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+    
+    architectureTestImplementation.extendsFrom testImplementation
+    architectureTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+dependencies {
+    // Spring Boot & Web Starter
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Observability (OTEL & Tracing)
+    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+
+    // REST DTO Jackson annotations support
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.19'
+
+    // Unit & Integration Testing Dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+    
+    // ArchUnit library
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.1.0'
+}
+
+openApiGenerate {
+    generatorName.set("spring")
+    inputSpec.set("$projectDir/docs/api/payment-session-api.yaml")
+    outputDir.set("$buildDir/generated-sources/openapi")
+    apiPackage.set("com.example.myapp.order.adapter.in.web.api")
+    modelPackage.set("com.example.myapp.order.adapter.in.web.dto")
+    configOptions.set([
+        interfaceOnly: "true",
+        useSpringBoot3: "true",
+        useTags: "true",
+        skipDefaultInterface: "true"
+    ])
+}
+
+// Enforce code generation before compiling
+compileJava.dependsOn tasks.openApiGenerate
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs outbound/inbound adapter integration and mock tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    useJUnitPlatform()
+    shouldRunAfter test
+}
+
+tasks.register('architectureTest', Test) {
+    description = 'Runs ArchUnit architectural compliance tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.architectureTest.output.classesDirs
+    classpath = sourceSets.architectureTest.runtimeClasspath
+    useJUnitPlatform()
+    shouldRunAfter test
+}
+
+// Bind custom tasks to build verification cycle
+check.dependsOn integrationTest, architectureTest

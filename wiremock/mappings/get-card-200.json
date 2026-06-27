@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/cards/[a-zA-Z0-9-]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "card_number": "1234567890123456",
+      "expiration_month": "12",
+      "expiration_year": "28",
+      "cvv": "123",
+      "cardholder_name": "John Doe"
+    }
+  }
+}

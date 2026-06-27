@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  title: Cards Service API (External)
+  description: Downstream API to retrieve saved tokenized card details.
+  version: 1.0.0
+paths:
+  /cards/{id}:
+    get:
+      summary: Retrieve saved card details by ID
+      operationId: getCardById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Saved card details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardResponse'
+        '404':
+          description: Card details not found.
+components:
+  schemas:
+    CardResponse:
+      type: object
+      required:
+        - card_number
+        - expiration_month
+        - expiration_year
+        - cvv
+        - cardholder_name
+      properties:
+        card_number:
+          type: string
+        expiration_month:
+          type: string
+        expiration_year:
+          type: string
+        cvv:
+          type: string
+        cardholder_name:
+          type: string

@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/sessions"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "session_id": "mock-session-id-998877",
+      "status": "APPROVED",
+      "expires_at": "2026-12-31T23:59:59Z"
+    }
+  }
+}

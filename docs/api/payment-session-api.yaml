@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+  title: Payment Session Service
+  description: Service to manage dynamic customer payment sessions.
+  version: 1.0.0
+paths:
+  /createSession:
+    post:
+      summary: Create a new payment session
+      operationId: createPaymentSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '201':
+          description: Payment Session successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentSessionResponse'
+        '400':
+          description: Invalid input parameters.
+        '404':
+          description: Saved card details not found.
+        '502':
+          description: External payment gateway failure.
+components:
+  schemas:
+    CreateSessionRequest:
+      type: object
+      required:
+        - card_type
+      properties:
+        card_type:
+          type: string
+          enum:
+            - NEW_CARD
+            - SAVED_CARD
+            - AUTOPAY_CARD
+        card_id:
+          type: string
+          description: Required if card_type is SAVED_CARD or AUTOPAY_CARD
+        inline_card_details:
+          $ref: '#/components/schemas/InlineCardDetails'
+    InlineCardDetails:
+      type: object
+      required:
+        - card_number
+        - expiration_month
+        - expiration_year
+        - cvv
+        - cardholder_name
+      properties:
+        card_number:
+          type: string
+          pattern: '^[0-9]{15,16}$'
+        expiration_month:
+          type: string
+          pattern: '^(0[1-9]|1[0-2])$'
+        expiration_year:
+          type: string
+          pattern: '^[0-9]{2|4}$'
+        cvv:
+          type: string
+          pattern: '^[0-9]{3,4}$'
+        cardholder_name:
+          type: string
+    PaymentSessionResponse:
+      type: object
+      required:
+        - session_id
+        - status
+        - expires_at
+      properties:
+        session_id:
+          type: string
+        status:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
