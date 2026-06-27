@@ -68,10 +68,10 @@ Configure HTTP endpoints and response translators.
   * Point task to `$projectDir/src/main/resources/contracts/payment-session-api.yaml`, setting `interfaceOnly: "true"`, and adding the generated directory path to both `sourceSets.main.java.srcDirs` and `idea.module.generatedSourceDirs`.
   * Run code generation (`./gradlew openApiGenerate`) to produce the `CreateSessionApi` interface and request/response DTOs.
 - [x] **4.3. Implement REST Controller**
-  * Create `PaymentSessionController` under `adapter/in/web` implementing the generated `CreateSessionApi` interface.
+  * Create `PaymentSessionController` under `adapter/in/rest` implementing the generated `CreateSessionApi` interface.
   * Implement mapping layer translating generated DTOs into core `CreatePaymentSessionCommand` entities.
 - [x] **4.4. Implement Global REST Exception Advice**
-  * Create/update `GlobalExceptionHandler` under `adapter/in/web`.
+  * Create/update `GlobalExceptionHandler` under `adapter/in/rest`.
   * Add `@ExceptionHandler` mappings for `CardNotFoundException` ($\rightarrow$ `404 Not Found`) and `PaymentSessionFailedException` ($\rightarrow$ `502 Bad Gateway`).
 - [x] **4.5. Write Driving Slice Tests (in `src/testIntegration/java`)**
   * Implement controller unit tests using `@WebMvcTest` with mocked `CreatePaymentSessionUseCase`.

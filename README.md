@@ -15,7 +15,7 @@ src/
 ├── main/
 │   ├── java/com/example/myapp/order/
 │   │   ├── adapter/                   # Driving & Driven Infrastructure
-│   │   │   ├── in/web/                # REST Controllers & Advice exception translators
+│   │   │   ├── in/rest/               # REST Driving Adapters (Controllers & Advice)
 │   │   │   └── out/client/            # WebClient downstream API clients
 │   │   ├── application/               # Core Application Orchestration
 │   │   │   ├── port/                  # Inbound and Outbound Port Interfaces & commands
@@ -36,7 +36,7 @@ src/
 ## 🛠️ Key Implementation Standards
 
 1. **Pure Domain & Core**: The domain entities and application services are compiled without third-party frameworks. They define their own rules, inputs, and outbound needs (via Ports).
-2. **Driving Web Adapters**: Implemented via controller stubs generated directly from [payment-session-api.yaml](src/main/resources/contracts/payment-session-api.yaml).
+2. **Driving REST Adapters**: Implemented via controller stubs inside `/adapter/in/rest` generated directly from [payment-session-api.yaml](src/main/resources/contracts/payment-session-api.yaml).
 3. **RFC 9457 Problem Details**: System errors are translated by the global REST advice handler into standardized Problem Details JSON payloads.
 4. **Transient Resilience**: Outbound WebClient HTTP adapters protect against network hiccups using reactive exponential backoff retries targeting only transient faults (HTTP 5xx, socket timeouts), leaving client errors (HTTP 4xx) un-retried.
 5. **Architectural Guardrails**: ArchUnit checks automatically enforce package boundaries during compile verification to prevent leakage of infrastructure packages into the domain core.

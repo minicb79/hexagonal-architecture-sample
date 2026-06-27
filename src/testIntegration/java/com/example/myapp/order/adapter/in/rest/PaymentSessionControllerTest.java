@@ -1,8 +1,8 @@
-package com.example.myapp.order.adapter.in.web;
+package com.example.myapp.order.adapter.in.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.myapp.order.adapter.in.web.dto.CreateSessionRequest;
-import com.example.myapp.order.adapter.in.web.dto.InlineCardDetails;
+import com.example.myapp.order.adapter.in.rest.dto.CreateSessionRequest;
+import com.example.myapp.order.adapter.in.rest.dto.InlineCardDetails;
 import com.example.myapp.order.application.port.in.CreatePaymentSessionUseCase;
 import com.example.myapp.order.domain.exception.CardNotFoundException;
 import com.example.myapp.order.domain.exception.PaymentSessionFailedException;

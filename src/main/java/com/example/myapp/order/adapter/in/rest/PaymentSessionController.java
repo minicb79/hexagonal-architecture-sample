@@ -1,9 +1,9 @@
-package com.example.myapp.order.adapter.in.web;
+package com.example.myapp.order.adapter.in.rest;
 
-import com.example.myapp.order.adapter.in.web.api.DefaultApi;
-import com.example.myapp.order.adapter.in.web.dto.CreateSessionRequest;
-import com.example.myapp.order.adapter.in.web.dto.InlineCardDetails;
-import com.example.myapp.order.adapter.in.web.dto.PaymentSessionResponse;
+import com.example.myapp.order.adapter.in.rest.api.DefaultApi;
+import com.example.myapp.order.adapter.in.rest.dto.CreateSessionRequest;
+import com.example.myapp.order.adapter.in.rest.dto.InlineCardDetails;
+import com.example.myapp.order.adapter.in.rest.dto.PaymentSessionResponse;
 import com.example.myapp.order.application.port.in.CreatePaymentSessionCommand;
 import com.example.myapp.order.application.port.in.CreatePaymentSessionUseCase;
 import com.example.myapp.order.domain.model.CardDetails;

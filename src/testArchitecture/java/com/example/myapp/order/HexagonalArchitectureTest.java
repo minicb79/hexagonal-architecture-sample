@@ -22,7 +22,7 @@ public class HexagonalArchitectureTest {
             .domainModels("com.example.myapp.order.domain.model..", "com.example.myapp.order.domain.exception..")
             .domainServices("com.example.myapp.order.domain.service..")
             .applicationServices("com.example.myapp.order.application..")
-            .adapter("web", "com.example.myapp.order.adapter.in.web..")
+            .adapter("rest", "com.example.myapp.order.adapter.in.rest..")
             .adapter("client", "com.example.myapp.order.adapter.out.client..")
             .withOptionalLayers(true);
 

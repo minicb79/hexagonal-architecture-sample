@@ -1,4 +1,4 @@
-package com.example.myapp.order.adapter.in.web;
+package com.example.myapp.order.adapter.in.rest;
 
 import com.example.myapp.order.domain.exception.CardNotFoundException;
 import com.example.myapp.order.domain.exception.PaymentSessionFailedException;
