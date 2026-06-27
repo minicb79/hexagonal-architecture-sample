@@ -3,6 +3,8 @@ package com.example.myapp.order.domain.model;
 import com.example.myapp.order.domain.exception.CardNotFoundException;
 import com.example.myapp.order.domain.exception.PaymentSessionFailedException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,13 +24,23 @@ class DomainLayerTest {
         assertEquals("John Doe", card.cardholderName());
     }
 
-    @Test
-    void shouldThrowExceptionWhenCardDetailsContainBlankOrNullValues() {
-        assertThrows(IllegalArgumentException.class, () -> 
-            new CardDetails(null, "12", "2030", "123", "John Doe")
-        );
-        assertThrows(IllegalArgumentException.class, () -> 
-            new CardDetails("1234567890123456", " ", "2030", "123", "John Doe")
+    @ParameterizedTest
+    @CsvSource({
+        ", 12, 2030, 123, John Doe",
+        "' ', 12, 2030, 123, John Doe",
+        "1234567890123456, , 2030, 123, John Doe",
+        "1234567890123456, ' ', 2030, 123, John Doe",
+        "1234567890123456, 12, , 123, John Doe",
+        "1234567890123456, 12, ' ', 123, John Doe",
+        "1234567890123456, 12, 2030, , John Doe",
+        "1234567890123456, 12, 2030, ' ', John Doe",
+        "1234567890123456, 12, 2030, 123, ",
+        "1234567890123456, 12, 2030, 123, ' '"
+    })
+    void shouldThrowExceptionWhenCardDetailsContainBlankOrNullValues(
+            String number, String month, String year, String cvv, String holder) {
+        assertThrows(IllegalArgumentException.class, () ->
+            new CardDetails(number, month, year, cvv, holder)
         );
     }
 
@@ -53,17 +65,18 @@ class DomainLayerTest {
         assertEquals(expiry, session.expiresAt());
     }
 
-    @Test
-    void shouldThrowExceptionWhenPaymentSessionContainsNullOrBlankValues() {
-        Instant expiry = Instant.now().plusSeconds(3600);
-        assertThrows(IllegalArgumentException.class, () -> 
-            new PaymentSession("", "APPROVED", expiry)
-        );
-        assertThrows(IllegalArgumentException.class, () -> 
-            new PaymentSession("id", null, expiry)
-        );
-        assertThrows(IllegalArgumentException.class, () -> 
-            new PaymentSession("id", "APPROVED", null)
+    @ParameterizedTest
+    @CsvSource({
+        "'', APPROVED, true",
+        "' ', APPROVED, true",
+        "id, , true",
+        "id, APPROVED, false"
+    })
+    void shouldThrowExceptionWhenPaymentSessionContainsNullOrBlankValues(
+            String id, String status, boolean hasExpiry) {
+        Instant expiry = hasExpiry ? Instant.now() : null;
+        assertThrows(IllegalArgumentException.class, () ->
+            new PaymentSession(id, status, expiry)
         );
     }
 
