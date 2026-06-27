@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  wiremock:
+    image: wiremock/wiremock:3.3.1
+    container_name: mock-downstream-services
+    ports:
+      - "8085:8080"
+    volumes:
+      - ./wiremock:/home/wiremock
+    command: --verbose

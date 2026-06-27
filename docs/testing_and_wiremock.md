@@ -12,11 +12,12 @@ Our hexagonal application interacts with two downstream microservices:
 Rather than calling real APIs, these boundaries are simulated using WireMock in two different ways:
 
 ### A. Local Boot Run Stubs (`/wiremock`)
-For local manual verification (e.g., when running `./gradlew bootRun`), a lightweight WireMock server is spun up locally to return static payloads.
+For local manual verification (e.g., when running `./gradlew bootRun`), a lightweight WireMock server can be spun up locally using Docker Compose to return static payloads.
 * Stub configurations are saved as JSON mappings under `wiremock/mappings/`:
   - `get-card-200.json`: Stubs `/cards/{card_id}` to return standard valid JSON representations.
   - `post-session-201.json`: Stubs POST `/sessions` to generate mock gateway references.
-* Running `bootRun` with the local configuration directs Spring’s WebClient instances to point to the WireMock port `8085` instead of production endpoints.
+* Use `docker compose up -d` to launch the WireMock container on port `8085`. The volume maps `./wiremock:/home/wiremock` so mapping updates are picked up dynamically.
+* Running `bootRun` directs Spring’s WebClient instances to point to the WireMock port `8085` instead of production endpoints.
 
 ### B. Automated Integration Tests (`testIntegration` SourceSet)
 Automated integration tests run against a dynamic WireMock server lifecycle managed inside the JUnit 5 test cases.

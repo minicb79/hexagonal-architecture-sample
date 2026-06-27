@@ -67,6 +67,21 @@ All testing sourceSets are prefixed with `test` for easy discovery:
 For detailed information regarding integration mocking strategy, stateful scenarios, and how Jetty classpath conflicts were resolved, see [testing_and_wiremock.md](docs/testing_and_wiremock.md).
 
 ### Running the Application
+To run and test the application manually:
+
+1. **Start the Downstream Mock Services**:
+   Spin up the standalone WireMock container containing the stub mapping files on port `8085`:
+   ```bash
+   docker compose up -d
+   ```
+2. **Launch the Spring Boot Application**:
+   Start the application locally on port `8080` (pre-configured to talk to the WireMock container on port `8085`):
+   ```bash
+   ./gradlew bootRun
+   ```
+
 | Command | Purpose |
 | :--- | :--- |
+| `docker compose up -d` | Boots the downstream mock APIs container using WireMock on port `8085`. |
+| `docker compose down` | Stops the downstream mock APIs container. |
 | `./gradlew bootRun` | Launches the Spring Boot application locally on port `8080`. |
