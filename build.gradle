@@ -132,3 +132,41 @@ tasks.register('testArchitecture', Test) {
 
 // Bind custom tasks to build verification cycle
 check.dependsOn testIntegration, testArchitecture
+
+// Docker Compose management tasks (All services)
+tasks.register('dockerUp', Exec) {
+    description = 'Starts all docker compose services in detached mode.'
+    group = 'docker'
+    commandLine 'docker', 'compose', '-f', 'docker/docker-compose.yml', 'up', '-d'
+}
+
+tasks.register('dockerDown', Exec) {
+    description = 'Stops all docker compose services.'
+    group = 'docker'
+    commandLine 'docker', 'compose', '-f', 'docker/docker-compose.yml', 'down'
+}
+
+tasks.register('dockerStatus', Exec) {
+    description = 'Displays status of all docker compose services.'
+    group = 'docker'
+    commandLine 'docker', 'compose', '-f', 'docker/docker-compose.yml', 'ps'
+}
+
+// Docker Compose management tasks (WireMock service specifically)
+tasks.register('dockerWiremockUp', Exec) {
+    description = 'Starts only the WireMock docker compose service in detached mode.'
+    group = 'docker'
+    commandLine 'docker', 'compose', '-f', 'docker/docker-compose.yml', 'up', '-d', 'wiremock'
+}
+
+tasks.register('dockerWiremockDown', Exec) {
+    description = 'Stops only the WireMock docker compose service.'
+    group = 'docker'
+    commandLine 'docker', 'compose', '-f', 'docker/docker-compose.yml', 'stop', 'wiremock'
+}
+
+tasks.register('dockerWiremockStatus', Exec) {
+    description = 'Displays status of the WireMock docker compose service.'
+    group = 'docker'
+    commandLine 'docker', 'compose', '-f', 'docker/docker-compose.yml', 'ps', 'wiremock'
+}

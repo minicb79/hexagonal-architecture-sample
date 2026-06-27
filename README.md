@@ -25,7 +25,11 @@ src/
 │   │   └── OrderApplication.java      # Application bootstrap entrypoint
 │   └── resources/
 │       ├── contracts/                 # OpenAPI Spec contracts defining API interfaces
-│       └── application.properties     # Spring properties & base URLs configuration
+│       └── application.yml            # Spring properties & base URLs configuration
+├── docker/                            # Docker Compose configuration folder
+│   ├── wiremock/                      # Service-specific mapping stubs for WireMock
+│   │   └── mappings/
+│   └── docker-compose.yml             # Networked docker compose specification
 ├── test/                              # Fast Core Unit Tests (Domain & Application logic)
 ├── testIntegration/                   # HTTP integration slices (WireMock downstream & WebMvc tests)
 └── testArchitecture/                  # ArchUnit boundary validation check suites
@@ -66,7 +70,33 @@ All testing sourceSets are prefixed with `test` for easy discovery:
 
 For detailed information regarding integration mocking strategy, stateful scenarios, and how Jetty classpath conflicts were resolved, see [testing_and_wiremock.md](docs/testing_and_wiremock.md).
 
-### Running the Application
+### Running the Application & Mock Services
+All Docker files are organized under the `/docker` directory, with service-specific subdirectories (e.g. `/docker/wiremock`). You can manage the lifecycle of these mock services natively using Docker Compose or via the integrated Gradle wrappers:
+
+1. **Start the Downstream Mock Services**:
+   Boots all services (or specifically target only WireMock):
+   ```bash
+   # Option A: Gradle Wrapper (All services)
+   ./gradlew dockerUp
+   
+   # Or starting only WireMock specifically
+   ./gradlew dockerWiremockUp
+
+   # Option B: Docker Compose directly
+   docker compose -f docker/docker-compose.yml up -d
+   ```
+2. **Launch the Spring Boot Application**:
+   Starts the service locally on port `8080` (pre-configured to talk to the container on port `8085` by default, customizable via environment variables in `application.yml`):
+   ```bash
+   ./gradlew bootRun
+   ```
+
 | Command | Purpose |
 | :--- | :--- |
+| `./gradlew dockerUp` | Starts **all** docker compose services in detached mode. |
+| `./gradlew dockerDown` | Stops **all** docker compose services. |
+| `./gradlew dockerStatus` | Displays the status of **all** docker compose services. |
+| `./gradlew dockerWiremockUp` | Starts **only** the WireMock service. |
+| `./gradlew dockerWiremockDown` | Stops **only** the WireMock service. |
+| `./gradlew dockerWiremockStatus` | Displays the status of **only** the WireMock service. |
 | `./gradlew bootRun` | Launches the Spring Boot application locally on port `8080`. |
