@@ -82,9 +82,9 @@ Configure HTTP endpoints and response translators.
 ## Phase 5: Dependency Configuration & Wiring
 Assemble the application and execute automated architectural checks.
 
-- [ ] **5.1. Implement Bean Configuration**
+- [x] **5.1. Implement Bean Configuration**
   * Create `PaymentSessionConfig` under `config` declaring `@Bean` instantiations for `CreatePaymentSessionUseCase` using pure constructor injections.
-- [ ] **5.2. ArchUnit Boundary Tests (in `src/architectureTest/java`)**
+- [x] **5.2. ArchUnit Boundary Tests (in `src/architectureTest/java`)**
   * Add `HexagonalArchitectureTest` to `src/architectureTest/java`.
   * Execute standard `onionArchitecture()` rules to assert package dependency compliance.
 
