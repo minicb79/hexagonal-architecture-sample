@@ -41,18 +41,18 @@ Build the core orchestrator and the input/output boundaries.
 ## Phase 3: Outbound Adapters (Driven Infrastructure)
 Connect the application to external systems and map exceptions.
 
-- [ ] **3.1. Implement Cards API Client**
+- [x] **3.1. Implement Cards API Client**
   * Create `CardsServiceAdapter` under `adapter/out/client` implementing `CardClientPort`.
   * Consume the external cards endpoints via Spring `WebClient`.
   * Catch `WebClientResponseException.NotFound` and map/rethrow it as `CardNotFoundException`.
-- [ ] **3.2. Implement Payments API Client**
+- [x] **3.2. Implement Payments API Client**
   * Create `PaymentsServiceAdapter` under `adapter/out/client` implementing `PaymentClientPort`.
   * Catch network failures or gateway errors and map/rethrow them as `PaymentSessionFailedException`.
-- [ ] **3.3. Write Outbound Adapter Tests (in `src/integrationTest/java`)**
+- [x] **3.3. Write Outbound Adapter Tests (in `src/integrationTest/java`)**
   * Implement integration tests utilizing **WireMock** to verify client request/response JSON mappings and correct exception translation behaviors.
-- [ ] **3.4. Create Local WireMock Mock Mappings (for bootRun)**
+- [x] **3.4. Create Local WireMock Mock Mappings (for bootRun)**
   * Create `wiremock/mappings/get-card-200.json` containing successful saved card json details.
-  * Create `wiremock/mappings/post-session-210.json` returning dynamic payment session keys.
+  * Create `wiremock/mappings/post-session-201.json` returning dynamic payment session keys.
   * Configure local Spring Profile to point HTTP web clients to the WireMock port `8085` during boot.
 
 ---

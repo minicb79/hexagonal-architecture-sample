@@ -7,13 +7,13 @@ build/
 *.iml
 *.ipr
 *.iws
-out/
+/out/
 
 # Eclipse
 .settings/
 .classpath
 .project
-bin/
+/bin/
 
 # OS-specific
 .DS_Store
