@@ -1,0 +1,8 @@
+app:
+  cards-service:
+    base-url: ${CARDS_SERVICE_URL:http://localhost:8085}
+  payments-service:
+    base-url: ${PAYMENTS_SERVICE_URL:http://localhost:8085}
+
+server:
+  port: 8080

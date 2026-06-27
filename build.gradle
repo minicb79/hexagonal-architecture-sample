@@ -132,3 +132,37 @@ tasks.register('testArchitecture', Test) {
 
 // Bind custom tasks to build verification cycle
 check.dependsOn testIntegration, testArchitecture
+
+// Docker Compose management tasks
+tasks.register('dockerUp', Exec) {
+    description = 'Starts docker compose services in detached mode. Filter services via project property: -Pservices="wiremock"'
+    group = 'docker'
+    def composeArgs = ['compose', 'up', '-d']
+    if (project.hasProperty('services')) {
+        composeArgs.addAll(project.property('services').split('\\s+'))
+    }
+    commandLine 'docker', *composeArgs
+}
+
+tasks.register('dockerDown', Exec) {
+    description = 'Stops docker compose services. Filter services via project property: -Pservices="wiremock"'
+    group = 'docker'
+    def composeArgs = ['compose', 'down']
+    // Note: down doesn't take individual service filters in standard docker compose without specific flags,
+    // but stop does. Let's support stop/rm if filtered, or standard down.
+    if (project.hasProperty('services')) {
+        composeArgs = ['compose', 'stop']
+        composeArgs.addAll(project.property('services').split('\\s+'))
+    }
+    commandLine 'docker', *composeArgs
+}
+
+tasks.register('dockerStatus', Exec) {
+    description = 'Displays status of running docker compose services. Filter services via project property: -Pservices="wiremock"'
+    group = 'docker'
+    def composeArgs = ['compose', 'ps']
+    if (project.hasProperty('services')) {
+        composeArgs.addAll(project.property('services').split('\\s+'))
+    }
+    commandLine 'docker', *composeArgs
+}

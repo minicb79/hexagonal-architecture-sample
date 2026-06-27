@@ -25,7 +25,7 @@ src/
 │   │   └── OrderApplication.java      # Application bootstrap entrypoint
 │   └── resources/
 │       ├── contracts/                 # OpenAPI Spec contracts defining API interfaces
-│       └── application.properties     # Spring properties & base URLs configuration
+│       └── application.yml            # Spring properties & base URLs configuration
 ├── test/                              # Fast Core Unit Tests (Domain & Application logic)
 ├── testIntegration/                   # HTTP integration slices (WireMock downstream & WebMvc tests)
 └── testArchitecture/                  # ArchUnit boundary validation check suites
@@ -66,7 +66,29 @@ All testing sourceSets are prefixed with `test` for easy discovery:
 
 For detailed information regarding integration mocking strategy, stateful scenarios, and how Jetty classpath conflicts were resolved, see [testing_and_wiremock.md](docs/testing_and_wiremock.md).
 
-### Running the Application
+### Running the Application & Mock Services
+To run and test the application manually, you can use either native Docker Compose commands or the integrated Gradle wrappers:
+
+1. **Start the Downstream Mock Services**:
+   Boots all services (or filter specific ones using the `services` property):
+   ```bash
+   # Option A: Gradle Wrapper
+   ./gradlew dockerUp
+   # Or starting only wiremock
+   ./gradlew dockerUp -Pservices="wiremock"
+
+   # Option B: Docker Compose directly
+   docker compose up -d
+   ```
+2. **Launch the Spring Boot Application**:
+   Starts the service locally on port `8080` (talking to the container on port `8085` by default, customizable via environment variables in `application.yml`):
+   ```bash
+   ./gradlew bootRun
+   ```
+
 | Command | Purpose |
 | :--- | :--- |
+| `./gradlew dockerUp` | Starts all docker compose services (or a specific one: `-Pservices="wiremock"`). |
+| `./gradlew dockerDown` | Stops all docker compose services (or a specific one: `-Pservices="wiremock"`). |
+| `./gradlew dockerStatus` | Displays current status of docker compose services. |
 | `./gradlew bootRun` | Launches the Spring Boot application locally on port `8080`. |
