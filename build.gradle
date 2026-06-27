@@ -84,6 +84,9 @@ dependencies {
     // ArchUnit library
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.1.0'
 
+    // WireMock Standalone for Integration Tests (prevents Jetty version conflicts)
+    testImplementation 'org.wiremock:wiremock-standalone:3.3.1'
+
     // JUnit Platform Launcher required by Gradle 9 test runner
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
