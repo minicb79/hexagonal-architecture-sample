@@ -32,16 +32,16 @@ sourceSets {
     }
 
     // Slow Integration tests (Controllers, WebClient HTTP adapters, WireMock)
-    integrationTest {
-        java { srcDirs = ['src/integrationTest/java'] }
-        resources { srcDirs = ['src/integrationTest/resources'] }
+    testIntegration {
+        java { srcDirs = ['src/testIntegration/java'] }
+        resources { srcDirs = ['src/testIntegration/resources'] }
         compileClasspath += sourceSets.main.output + sourceSets.test.output
         runtimeClasspath += sourceSets.main.output + sourceSets.test.output
     }
 
     // Architecture compliance tests (ArchUnit)
-    architectureTest {
-        java { srcDirs = ['src/architectureTest/java'] }
+    testArchitecture {
+        java { srcDirs = ['src/testArchitecture/java'] }
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
     }
@@ -55,11 +55,11 @@ idea {
 }
 
 configurations {
-    integrationTestImplementation.extendsFrom testImplementation
-    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+    testIntegrationImplementation.extendsFrom testImplementation
+    testIntegrationRuntimeOnly.extendsFrom testRuntimeOnly
     
-    architectureTestImplementation.extendsFrom testImplementation
-    architectureTestRuntimeOnly.extendsFrom testRuntimeOnly
+    testArchitectureImplementation.extendsFrom testImplementation
+    testArchitectureRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 dependencies {
@@ -112,23 +112,23 @@ test {
     useJUnitPlatform()
 }
 
-tasks.register('integrationTest', Test) {
+tasks.register('testIntegration', Test) {
     description = 'Runs outbound/inbound adapter integration and mock tests.'
     group = 'verification'
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    testClassesDirs = sourceSets.testIntegration.output.classesDirs
+    classpath = sourceSets.testIntegration.runtimeClasspath
     useJUnitPlatform()
     shouldRunAfter test
 }
 
-tasks.register('architectureTest', Test) {
+tasks.register('testArchitecture', Test) {
     description = 'Runs ArchUnit architectural compliance tests.'
     group = 'verification'
-    testClassesDirs = sourceSets.architectureTest.output.classesDirs
-    classpath = sourceSets.architectureTest.runtimeClasspath
+    testClassesDirs = sourceSets.testArchitecture.output.classesDirs
+    classpath = sourceSets.testArchitecture.runtimeClasspath
     useJUnitPlatform()
     shouldRunAfter test
 }
 
 // Bind custom tasks to build verification cycle
-check.dependsOn integrationTest, architectureTest
+check.dependsOn testIntegration, testArchitecture

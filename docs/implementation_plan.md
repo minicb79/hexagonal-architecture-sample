@@ -48,7 +48,7 @@ Connect the application to external systems and map exceptions.
 - [x] **3.2. Implement Payments API Client**
   * Create `PaymentsServiceAdapter` under `adapter/out/client` implementing `PaymentClientPort`.
   * Catch network failures or gateway errors and map/rethrow them as `PaymentSessionFailedException`.
-- [x] **3.3. Write Outbound Adapter Tests (in `src/integrationTest/java`)**
+- [x] **3.3. Write Outbound Adapter Tests (in `src/testIntegration/java`)**
   * Implement integration tests utilizing **WireMock** to verify client request/response JSON mappings and correct exception translation behaviors.
 - [x] **3.4. Create Local WireMock Mock Mappings (for bootRun)**
   * Create `wiremock/mappings/get-card-200.json` containing successful saved card json details.
@@ -73,7 +73,7 @@ Configure HTTP endpoints and response translators.
 - [x] **4.4. Implement Global REST Exception Advice**
   * Create/update `GlobalExceptionHandler` under `adapter/in/web`.
   * Add `@ExceptionHandler` mappings for `CardNotFoundException` ($\rightarrow$ `404 Not Found`) and `PaymentSessionFailedException` ($\rightarrow$ `502 Bad Gateway`).
-- [x] **4.5. Write Driving Slice Tests (in `src/integrationTest/java`)**
+- [x] **4.5. Write Driving Slice Tests (in `src/testIntegration/java`)**
   * Implement controller unit tests using `@WebMvcTest` with mocked `CreatePaymentSessionUseCase`.
   * Verify request validations, payload deserialization, and HTTP exception status code maps.
 
@@ -84,8 +84,8 @@ Assemble the application and execute automated architectural checks.
 
 - [x] **5.1. Implement Bean Configuration**
   * Create `PaymentSessionConfig` under `config` declaring `@Bean` instantiations for `CreatePaymentSessionUseCase` using pure constructor injections.
-- [x] **5.2. ArchUnit Boundary Tests (in `src/architectureTest/java`)**
-  * Add `HexagonalArchitectureTest` to `src/architectureTest/java`.
+- [x] **5.2. ArchUnit Boundary Tests (in `src/testArchitecture/java`)**
+  * Add `HexagonalArchitectureTest` to `src/testArchitecture/java`.
   * Execute standard `onionArchitecture()` rules to assert package dependency compliance.
 
 ---
@@ -98,6 +98,6 @@ Add protection against transient network spikes and downstream API hiccups.
   * Define backoff rules (exponential backoff with max 3 attempts) for transient errors (e.g. `503 Service Unavailable`, connect timeouts).
 - [x] **6.2. Define Retryable vs. Unretryable Faults**
   * Verify that logic does *not* retry syntax validation errors or client-side issues (e.g., `400 Bad Request`, `404 Not Found`).
-- [x] **6.3. Write Fault Integration Tests (in `src/integrationTest/java`)**
+- [x] **6.3. Write Fault Integration Tests (in `src/testIntegration/java`)**
   * Write WireMock tests that return consecutive transient failures (e.g., two 503s followed by one 200 Success) to verify that the retry mechanism recovers correctly.
   * Verify that if max attempts are exceeded, `PaymentSessionFailedException` is thrown.
