@@ -7,12 +7,12 @@ This checklist outlines the implementation phases for the payment session creati
 ## Phase 1: Domain Layer Foundation
 Establish the core business rules and types with zero framework dependencies.
 
-- [ ] **1.1. Create Domain Models & Exceptions**
+- [x] **1.1. Create Domain Models & Exceptions**
   * Create `CardType` enum (`NEW_CARD`, `SAVED_CARD`, `AUTOPAY_CARD`) under `domain/model`.
   * Create `CardDetails` record (Value Object) under `domain/model`.
   * Create `PaymentSession` record (Entity) under `domain/model`.
   * Create `CardNotFoundException` and `PaymentSessionFailedException` under `domain/exception`.
-- [ ] **1.2. Write Domain Unit Tests (in `src/test/java`)**
+- [x] **1.2. Write Domain Unit Tests (in `src/test/java`)**
   * Test domain models comparison/equality checks.
   * Verify that domain exceptions hold appropriate messages and nested root cause properties.
 
@@ -21,16 +21,16 @@ Establish the core business rules and types with zero framework dependencies.
 ## Phase 2: Application Layer (Ports & Orchestration)
 Build the core orchestrator and the input/output boundaries.
 
-- [ ] **2.1. Define Inbound & Outbound Ports**
+- [x] **2.1. Define Inbound & Outbound Ports**
   * Create `CreatePaymentSessionUseCase` interface (Inbound Port) under `application/port/in`.
   * Create `CardClientPort` and `PaymentClientPort` interfaces (Outbound Ports) under `application/port/out`.
-- [ ] **2.2. Implement Inbound Command DTO**
+- [x] **2.2. Implement Inbound Command DTO**
   * Create `CreatePaymentSessionCommand` record under `application/port/in`.
   * Implement conditional self-validating rules inside the record's constructor (check `cardId` presence for saved cards and `inlineCardDetails` for new cards).
-- [ ] **2.3. Implement Core Use Case Service**
+- [x] **2.3. Implement Core Use Case Service**
   * Create `PaymentSessionApplicationService` under `application/service` implementing `CreatePaymentSessionUseCase`.
   * Implement branching lookup logic based on `CardType`, then call the payment client port.
-- [ ] **2.4. Write Application Unit Tests (in `src/test/java`)**
+- [x] **2.4. Write Application Unit Tests (in `src/test/java`)**
   * Write Mockito unit tests for `PaymentSessionApplicationService`.
   * Verify that if `cardType` is `SAVED_CARD` or `AUTOPAY_CARD`, `CardClientPort` is invoked exactly once.
   * Verify that if `cardType` is `NEW_CARD`, `CardClientPort` is bypassed and inline details are passed directly.
