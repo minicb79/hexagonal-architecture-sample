@@ -60,20 +60,20 @@ Connect the application to external systems and map exceptions.
 ## Phase 4: Inbound Adapters (Driving Entry Points)
 Configure HTTP endpoints and response translators.
 
-- [ ] **4.1. Define OpenAPI Specifications**
+- [x] **4.1. Define OpenAPI Specifications**
   * Store `payment-session-api.yaml` under `docs/api/` representing the service contract.
   * Store `external-cards-api.yaml` and `external-payments-api.yaml` representing downstream mocks.
-- [ ] **4.2. Configure OpenAPI Generator Gradle Task & IDE Source Mapping**
+- [x] **4.2. Configure OpenAPI Generator Gradle Task & IDE Source Mapping**
   * Apply `org.openapi.generator` and the `idea` plugin in `build.gradle`.
   * Point task to `$projectDir/docs/api/payment-session-api.yaml`, setting `interfaceOnly: "true"`, and adding the generated directory path to both `sourceSets.main.java.srcDirs` and `idea.module.generatedSourceDirs`.
   * Run code generation (`./gradlew openApiGenerate`) to produce the `CreateSessionApi` interface and request/response DTOs.
-- [ ] **4.3. Implement REST Controller**
+- [x] **4.3. Implement REST Controller**
   * Create `PaymentSessionController` under `adapter/in/web` implementing the generated `CreateSessionApi` interface.
   * Implement mapping layer translating generated DTOs into core `CreatePaymentSessionCommand` entities.
-- [ ] **4.4. Implement Global REST Exception Advice**
+- [x] **4.4. Implement Global REST Exception Advice**
   * Create/update `GlobalExceptionHandler` under `adapter/in/web`.
   * Add `@ExceptionHandler` mappings for `CardNotFoundException` ($\rightarrow$ `404 Not Found`) and `PaymentSessionFailedException` ($\rightarrow$ `502 Bad Gateway`).
-- [ ] **4.5. Write Driving Slice Tests (in `src/integrationTest/java`)**
+- [x] **4.5. Write Driving Slice Tests (in `src/integrationTest/java`)**
   * Implement controller unit tests using `@WebMvcTest` with mocked `CreatePaymentSessionUseCase`.
   * Verify request validations, payload deserialization, and HTTP exception status code maps.
 
