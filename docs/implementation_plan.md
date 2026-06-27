@@ -61,11 +61,11 @@ Connect the application to external systems and map exceptions.
 Configure HTTP endpoints and response translators.
 
 - [x] **4.1. Define OpenAPI Specifications**
-  * Store `payment-session-api.yaml` under `docs/api/` representing the service contract.
+  * Store `payment-session-api.yaml` under `src/main/resources/contracts/` representing the service contract.
   * Store `external-cards-api.yaml` and `external-payments-api.yaml` representing downstream mocks.
 - [x] **4.2. Configure OpenAPI Generator Gradle Task & IDE Source Mapping**
   * Apply `org.openapi.generator` and the `idea` plugin in `build.gradle`.
-  * Point task to `$projectDir/docs/api/payment-session-api.yaml`, setting `interfaceOnly: "true"`, and adding the generated directory path to both `sourceSets.main.java.srcDirs` and `idea.module.generatedSourceDirs`.
+  * Point task to `$projectDir/src/main/resources/contracts/payment-session-api.yaml`, setting `interfaceOnly: "true"`, and adding the generated directory path to both `sourceSets.main.java.srcDirs` and `idea.module.generatedSourceDirs`.
   * Run code generation (`./gradlew openApiGenerate`) to produce the `CreateSessionApi` interface and request/response DTOs.
 - [x] **4.3. Implement REST Controller**
   * Create `PaymentSessionController` under `adapter/in/web` implementing the generated `CreateSessionApi` interface.

@@ -93,7 +93,7 @@ dependencies {
 
 openApiGenerate {
     generatorName.set("spring")
-    inputSpec.set("$projectDir/docs/api/payment-session-api.yaml")
+    inputSpec.set("$projectDir/src/main/resources/contracts/payment-session-api.yaml")
     outputDir.set("$buildDir/generated-sources/openapi")
     apiPackage.set("com.example.myapp.order.adapter.in.web.api")
     modelPackage.set("com.example.myapp.order.adapter.in.web.dto")
