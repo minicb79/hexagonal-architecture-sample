@@ -27,6 +27,9 @@ public class CardsServiceAdapter implements CardClientPort {
                     .uri("/cards/{id}", cardId)
                     .retrieve()
                     .bodyToMono(CardResponse.class)
+                    .retryWhen(reactor.util.retry.Retry.backoff(3, java.time.Duration.ofMillis(50))
+                            .filter(this::isTransientException)
+                            .onRetryExhaustedThrow((spec, signal) -> signal.failure()))
                     .block();
 
             if (response == null) {
@@ -48,6 +51,14 @@ public class CardsServiceAdapter implements CardClientPort {
         } catch (Exception e) {
             throw new PaymentSessionFailedException("Unexpected failure during card retrieval: " + e.getMessage(), e);
         }
+    }
+
+    private boolean isTransientException(Throwable throwable) {
+        if (throwable instanceof WebClientResponseException wcre) {
+            return wcre.getStatusCode().is5xxServerError();
+        }
+        return throwable instanceof java.io.IOException 
+                || throwable instanceof java.util.concurrent.TimeoutException;
     }
 
     /**

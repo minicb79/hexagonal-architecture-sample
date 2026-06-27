@@ -93,11 +93,11 @@ Assemble the application and execute automated architectural checks.
 ## Phase 6: Resilience & Transient Fault Tolerance
 Add protection against transient network spikes and downstream API hiccups.
 
-- [ ] **6.1. Configure Spring Retry or WebClient Retry**
+- [x] **6.1. Configure Spring Retry or WebClient Retry**
   * Add `org.springframework.retry:spring-retry` or configure WebClient’s reactive `.retryWhen()` helper block.
   * Define backoff rules (exponential backoff with max 3 attempts) for transient errors (e.g. `503 Service Unavailable`, connect timeouts).
-- [ ] **6.2. Define Retryable vs. Unretryable Faults**
+- [x] **6.2. Define Retryable vs. Unretryable Faults**
   * Verify that logic does *not* retry syntax validation errors or client-side issues (e.g., `400 Bad Request`, `404 Not Found`).
-- [ ] **6.3. Write Fault Integration Tests (in `src/integrationTest/java`)**
+- [x] **6.3. Write Fault Integration Tests (in `src/integrationTest/java`)**
   * Write WireMock tests that return consecutive transient failures (e.g., two 503s followed by one 200 Success) to verify that the retry mechanism recovers correctly.
   * Verify that if max attempts are exceeded, `PaymentSessionFailedException` is thrown.

@@ -120,8 +120,8 @@ class ClientAdaptersIntegrationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {400, 401, 500, 503})
-    void paymentsAdapterShouldTranslateDownstreamErrorsToPaymentSessionFailedException(int statusCode) {
+    @ValueSource(ints = {400, 401})
+    void paymentsAdapterShouldTranslateDownstreamErrorsToPaymentSessionFailedExceptionAndNotRetry(int statusCode) {
         // GIVEN
         CardDetails cardDetails = new CardDetails("1234567890123456", "11", "29", "999", "Alice Smith");
         wireMockServer.stubFor(post(urlEqualTo("/sessions"))
@@ -131,5 +131,64 @@ class ClientAdaptersIntegrationTest {
 
         // WHEN & THEN
         assertThrows(PaymentSessionFailedException.class, () -> paymentsAdapter.createSession(cardDetails));
+        
+        // Assert that exactly 1 request was made (no retries for 4xx errors)
+        wireMockServer.verify(1, postRequestedFor(urlEqualTo("/sessions")));
+    }
+
+    @Test
+    void cardsAdapterShouldRecoverAfterTransientDownstreamFailures() {
+        // GIVEN
+        String cardId = "retry-card";
+        wireMockServer.stubFor(get(urlEqualTo("/cards/" + cardId))
+                .inScenario("Cards Retry Scenario")
+                .whenScenarioStateIs(com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED)
+                .willSetStateTo("First Failure")
+                .willReturn(aResponse().withStatus(503)));
+
+        wireMockServer.stubFor(get(urlEqualTo("/cards/" + cardId))
+                .inScenario("Cards Retry Scenario")
+                .whenScenarioStateIs("First Failure")
+                .willSetStateTo("Second Failure")
+                .willReturn(aResponse().withStatus(503)));
+
+        wireMockServer.stubFor(get(urlEqualTo("/cards/" + cardId))
+                .inScenario("Cards Retry Scenario")
+                .whenScenarioStateIs("Second Failure")
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("""
+                                {
+                                  "card_number": "1234567890123456",
+                                  "expiration_month": "11",
+                                  "expiration_year": "29",
+                                  "cvv": "999",
+                                  "cardholder_name": "Alice Smith"
+                                }
+                                """)));
+
+        // WHEN
+        CardDetails cardDetails = cardsAdapter.getCardDetails(cardId);
+
+        // THEN
+        assertNotNull(cardDetails);
+        assertEquals("1234567890123456", cardDetails.cardNumber());
+        
+        // Verify exactly 3 calls were made (1 initial + 2 retries)
+        wireMockServer.verify(3, getRequestedFor(urlEqualTo("/cards/" + cardId)));
+    }
+
+    @Test
+    void cardsAdapterShouldThrowExceptionWhenMaxRetriesAreExhausted() {
+        // GIVEN
+        String cardId = "exhausted-card";
+        wireMockServer.stubFor(get(urlEqualTo("/cards/" + cardId))
+                .willReturn(aResponse().withStatus(503)));
+
+        // WHEN & THEN
+        assertThrows(PaymentSessionFailedException.class, () -> cardsAdapter.getCardDetails(cardId));
+
+        // Verify exactly 4 calls were made (1 initial + 3 retries)
+        wireMockServer.verify(4, getRequestedFor(urlEqualTo("/cards/" + cardId)));
     }
 }
