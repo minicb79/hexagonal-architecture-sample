@@ -36,6 +36,9 @@ public class PaymentsServiceAdapter implements PaymentClientPort {
                     .bodyValue(request)
                     .retrieve()
                     .bodyToMono(GatewaySessionResponse.class)
+                    .retryWhen(reactor.util.retry.Retry.backoff(3, java.time.Duration.ofMillis(50))
+                            .filter(this::isTransientException)
+                            .onRetryExhaustedThrow((spec, signal) -> signal.failure()))
                     .block();
 
             if (response == null) {
@@ -54,6 +57,14 @@ public class PaymentsServiceAdapter implements PaymentClientPort {
         } catch (Exception e) {
             throw new PaymentSessionFailedException("Unexpected failure during payment session creation: " + e.getMessage(), e);
         }
+    }
+
+    private boolean isTransientException(Throwable throwable) {
+        if (throwable instanceof WebClientResponseException wcre) {
+            return wcre.getStatusCode().is5xxServerError();
+        }
+        return throwable instanceof java.io.IOException 
+                || throwable instanceof java.util.concurrent.TimeoutException;
     }
 
     /**
