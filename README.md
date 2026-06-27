@@ -64,6 +64,8 @@ All testing sourceSets are prefixed with `test` for easy discovery:
 | `./gradlew testArchitecture` | Runs **ArchUnit compliance tests** verifying package boundary dependencies. |
 | `./gradlew check` | Runs **ALL tests** (Unit, Integration, and Architecture compliance) and generates reports. |
 
+For detailed information regarding integration mocking strategy, stateful scenarios, and how Jetty classpath conflicts were resolved, see [testing_and_wiremock.md](docs/testing_and_wiremock.md).
+
 ### Running the Application
 | Command | Purpose |
 | :--- | :--- |
