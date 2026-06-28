@@ -9,16 +9,15 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Driven adapter implementing PaymentClientPort using WebClient.
  */
+@RequiredArgsConstructor
 public class PaymentsServiceAdapter implements PaymentClientPort {
 
     private final WebClient webClient;
-
-    public PaymentsServiceAdapter(WebClient webClient) {
-        this.webClient = webClient;
-    }
 
     @Override
     public PaymentSession createSession(CardDetails cardDetails) {

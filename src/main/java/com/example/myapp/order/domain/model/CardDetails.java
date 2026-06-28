@@ -1,9 +1,12 @@
 package com.example.myapp.order.domain.model;
 
+import lombok.Builder;
+
 /**
  * Value Object representing credit card details.
  * Immutability is guaranteed by Java record declaration.
  */
+@Builder
 public record CardDetails(
     String cardNumber,
     String expirationMonth,

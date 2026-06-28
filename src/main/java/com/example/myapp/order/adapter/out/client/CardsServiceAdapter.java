@@ -9,16 +9,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Driven adapter implementing CardClientPort using WebClient.
  */
+@RequiredArgsConstructor
 public class CardsServiceAdapter implements CardClientPort {
 
     private final WebClient webClient;
-
-    public CardsServiceAdapter(WebClient webClient) {
-        this.webClient = webClient;
-    }
 
     @Override
     public CardDetails getCardDetails(String cardId) {

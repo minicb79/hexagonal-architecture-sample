@@ -14,17 +14,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.ZoneOffset;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Driving adapter (REST Controller) implementing the generated OpenAPI DefaultApi.
  */
 @RestController
+@RequiredArgsConstructor
 public class PaymentSessionController implements DefaultApi {
 
     private final CreatePaymentSessionUseCase createPaymentSessionUseCase;
-
-    public PaymentSessionController(CreatePaymentSessionUseCase createPaymentSessionUseCase) {
-        this.createPaymentSessionUseCase = createPaymentSessionUseCase;
-    }
 
     @Override
     public ResponseEntity<PaymentSessionResponse> createPaymentSession(CreateSessionRequest request) {
