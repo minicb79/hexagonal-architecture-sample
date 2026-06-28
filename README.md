@@ -83,7 +83,7 @@ All Docker files are organized under the `/docker` directory, with service-speci
    ./gradlew dockerWiremockUp
 
    # Option B: Docker Compose directly
-   docker compose -f docker/docker-compose.yml up -d
+   docker-compose -f docker/docker-compose.yml up -d
    ```
 2. **Launch the Spring Boot Application**:
    Starts the service locally on port `8080` (pre-configured to talk to the container on port `8085` by default, customizable via environment variables in `application.yml`):
