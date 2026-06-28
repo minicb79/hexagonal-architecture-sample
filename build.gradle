@@ -5,6 +5,7 @@ plugins {
     id 'java'
     id 'org.openapi.generator' version '7.1.0'
     id 'idea'
+    id 'jacoco'
 }
 
 group = 'com.example'
@@ -148,8 +149,54 @@ tasks.register('testArchitecture', Test) {
     shouldRunAfter test
 }
 
+// Configure JaCoCo reporting & verification
+jacoco {
+    toolVersion = "0.8.15"
+}
+
+jacocoTestReport {
+    dependsOn test, testIntegration
+    executionData files("$buildDir/jacoco/test.exec", "$buildDir/jacoco/testIntegration.exec")
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+
+    classDirectories.setFrom(files(classDirectories.files.collect {
+        fileTree(dir: it, exclude: [
+            'com/example/myapp/order/adapter/in/rest/api/**',
+            'com/example/myapp/order/adapter/in/rest/dto/**',
+            'com/example/myapp/order/OrderApplication*',
+            'com/example/myapp/order/config/**'
+        ])
+    }))
+}
+
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    executionData files("$buildDir/jacoco/test.exec", "$buildDir/jacoco/testIntegration.exec")
+
+    classDirectories.setFrom(files(classDirectories.files.collect {
+        fileTree(dir: it, exclude: [
+            'com/example/myapp/order/adapter/in/rest/api/**',
+            'com/example/myapp/order/adapter/in/rest/dto/**',
+            'com/example/myapp/order/OrderApplication*',
+            'com/example/myapp/order/config/**'
+        ])
+    }))
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.90
+            }
+        }
+    }
+}
+
 // Bind custom tasks to build verification cycle
-check.dependsOn testIntegration, testArchitecture
+check.dependsOn testIntegration, testArchitecture, jacocoTestCoverageVerification
 
 // Docker Compose management tasks (All services)
 tasks.register('dockerUp', Exec) {
