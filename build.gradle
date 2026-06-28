@@ -91,6 +91,11 @@ dependencies {
 
     // JUnit Platform Launcher required by Gradle 9 test runner
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Netty macOS DNS resolver to clear macOS-specific DNS warnings on startup
+    runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.114.Final'
+    runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.114.Final:osx-aarch_64'
+    runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.114.Final:osx-x86_64'
 }
 
 openApiGenerate {
