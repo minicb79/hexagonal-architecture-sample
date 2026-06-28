@@ -1,4 +1,4 @@
-package com.example.myapp.order.adapter.out.client;
+package com.example.myapp.order.adapter.out;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.example.myapp.order.domain.exception.CardNotFoundException;
@@ -13,14 +13,16 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.time.Instant;
-import com.example.myapp.order.adapter.out.client.model.CardResponse;
-import com.example.myapp.order.adapter.out.client.model.GatewaySessionRequest;
-import com.example.myapp.order.adapter.out.client.model.GatewaySessionResponse;
+import com.example.myapp.order.adapter.out.cardsservice.CardsServiceAdapter;
+import com.example.myapp.order.adapter.out.cardsservice.model.CardResponse;
+import com.example.myapp.order.adapter.out.paymentsservice.PaymentsServiceAdapter;
+import com.example.myapp.order.adapter.out.paymentsservice.model.GatewaySessionRequest;
+import com.example.myapp.order.adapter.out.paymentsservice.model.GatewaySessionResponse;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ClientAdaptersIntegrationTest {
+class OutboundServiceAdaptersIntegrationTest {
 
     private WireMockServer wireMockServer;
     private CardsServiceAdapter cardsAdapter;

@@ -24,7 +24,8 @@ public class HexagonalArchitectureTest {
             .domainServices("com.example.myapp.order.domain.service..")
             .applicationServices("com.example.myapp.order.application..")
             .adapter("rest", "com.example.myapp.order.adapter.in.rest..")
-            .adapter("client", "com.example.myapp.order.adapter.out.client..")
+            .adapter("cardsservice", "com.example.myapp.order.adapter.out.cardsservice..")
+            .adapter("paymentsservice", "com.example.myapp.order.adapter.out.paymentsservice..")
             .withOptionalLayers(true);
 
     @ArchTest
@@ -43,7 +44,12 @@ public class HexagonalArchitectureTest {
             .should().dependOnClassesThat().resideInAPackage("..order.adapter..");
 
     @ArchTest
-    public static final ArchRule client_models_are_private_to_outbound_client_adapter = classes()
-            .that().resideInAPackage("..adapter.out.client.model..")
-            .should().onlyBeAccessed().byAnyPackage("..adapter.out.client..");
+    public static final ArchRule card_models_are_private_to_cards_service = classes()
+            .that().resideInAPackage("..adapter.out.cardsservice.model..")
+            .should().onlyBeAccessed().byAnyPackage("..adapter.out.cardsservice..");
+
+    @ArchTest
+    public static final ArchRule payment_models_are_private_to_payments_service = classes()
+            .that().resideInAPackage("..adapter.out.paymentsservice.model..")
+            .should().onlyBeAccessed().byAnyPackage("..adapter.out.paymentsservice..");
 }

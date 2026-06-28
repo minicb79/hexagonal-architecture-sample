@@ -1,13 +1,13 @@
-package com.example.myapp.order.adapter.out.client;
+package com.example.myapp.order.adapter.out.cardsservice;
 
-import com.example.myapp.order.application.port.out.CardClientPort;
+import com.example.myapp.order.application.port.out.cardsservice.CardClientPort;
 import com.example.myapp.order.domain.exception.CardNotFoundException;
 import com.example.myapp.order.domain.exception.PaymentSessionFailedException;
 import com.example.myapp.order.domain.model.CardDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import com.example.myapp.order.adapter.out.client.model.CardResponse;
+import com.example.myapp.order.adapter.out.cardsservice.model.CardResponse;
 import lombok.RequiredArgsConstructor;
 
 /**

@@ -2,8 +2,8 @@ package com.example.myapp.order.application.service;
 
 import com.example.myapp.order.application.port.in.CreatePaymentSessionCommand;
 import com.example.myapp.order.application.port.in.CreatePaymentSessionUseCase;
-import com.example.myapp.order.application.port.out.CardClientPort;
-import com.example.myapp.order.application.port.out.PaymentClientPort;
+import com.example.myapp.order.application.port.out.cardsservice.CardClientPort;
+import com.example.myapp.order.application.port.out.paymentsservice.PaymentClientPort;
 import com.example.myapp.order.domain.model.CardDetails;
 import com.example.myapp.order.domain.model.PaymentSession;
 

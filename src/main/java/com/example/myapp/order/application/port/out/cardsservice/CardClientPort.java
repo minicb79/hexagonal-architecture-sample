@@ -1,4 +1,4 @@
-package com.example.myapp.order.application.port.out;
+package com.example.myapp.order.application.port.out.cardsservice;
 
 import com.example.myapp.order.domain.model.CardDetails;
 

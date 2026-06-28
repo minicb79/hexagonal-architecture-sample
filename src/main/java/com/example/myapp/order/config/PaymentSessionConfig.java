@@ -1,10 +1,10 @@
 package com.example.myapp.order.config;
 
-import com.example.myapp.order.adapter.out.client.CardsServiceAdapter;
-import com.example.myapp.order.adapter.out.client.PaymentsServiceAdapter;
+import com.example.myapp.order.adapter.out.cardsservice.CardsServiceAdapter;
+import com.example.myapp.order.adapter.out.paymentsservice.PaymentsServiceAdapter;
 import com.example.myapp.order.application.port.in.CreatePaymentSessionUseCase;
-import com.example.myapp.order.application.port.out.CardClientPort;
-import com.example.myapp.order.application.port.out.PaymentClientPort;
+import com.example.myapp.order.application.port.out.cardsservice.CardClientPort;
+import com.example.myapp.order.application.port.out.paymentsservice.PaymentClientPort;
 import com.example.myapp.order.application.service.PaymentSessionApplicationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
