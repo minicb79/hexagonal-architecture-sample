@@ -13,6 +13,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.time.Instant;
+import com.example.myapp.order.adapter.out.client.model.CardResponse;
+import com.example.myapp.order.adapter.out.client.model.GatewaySessionRequest;
+import com.example.myapp.order.adapter.out.client.model.GatewaySessionResponse;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;

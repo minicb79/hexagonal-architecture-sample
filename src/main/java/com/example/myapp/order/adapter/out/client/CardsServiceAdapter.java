@@ -7,8 +7,7 @@ import com.example.myapp.order.domain.model.CardDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.example.myapp.order.adapter.out.client.model.CardResponse;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -64,14 +63,4 @@ public class CardsServiceAdapter implements CardClientPort {
                 || cause instanceof java.util.concurrent.TimeoutException;
     }
 
-    /**
-     * Package-private DTO representing the downstream API response to prevent core pollution.
-     */
-    record CardResponse(
-            @JsonProperty("card_number") String cardNumber,
-            @JsonProperty("expiration_month") String expirationMonth,
-            @JsonProperty("expiration_year") String expirationYear,
-            @JsonProperty("cvv") String cvv,
-            @JsonProperty("cardholder_name") String cardholderName
-    ) {}
 }

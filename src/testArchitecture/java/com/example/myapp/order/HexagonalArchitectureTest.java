@@ -4,6 +4,7 @@ import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.Architectures.onionArchitecture;
 
@@ -40,4 +41,9 @@ public class HexagonalArchitectureTest {
     public static final ArchRule application_must_not_depend_on_adapters = noClasses()
             .that().resideInAPackage("..order.application..")
             .should().dependOnClassesThat().resideInAPackage("..order.adapter..");
+
+    @ArchTest
+    public static final ArchRule client_models_are_private_to_outbound_client_adapter = classes()
+            .that().resideInAPackage("..adapter.out.client.model..")
+            .should().onlyBeAccessed().byAnyPackage("..adapter.out.client..");
 }
