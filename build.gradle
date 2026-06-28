@@ -156,7 +156,10 @@ jacoco {
 
 jacocoTestReport {
     dependsOn test, testIntegration
-    executionData files("$buildDir/jacoco/test.exec", "$buildDir/jacoco/testIntegration.exec")
+    executionData files(
+        layout.buildDirectory.file("jacoco/test.exec"),
+        layout.buildDirectory.file("jacoco/testIntegration.exec")
+    )
 
     reports {
         xml.required = true
@@ -175,7 +178,10 @@ jacocoTestReport {
 
 jacocoTestCoverageVerification {
     dependsOn jacocoTestReport
-    executionData files("$buildDir/jacoco/test.exec", "$buildDir/jacoco/testIntegration.exec")
+    executionData files(
+        layout.buildDirectory.file("jacoco/test.exec"),
+        layout.buildDirectory.file("jacoco/testIntegration.exec")
+    )
 
     classDirectories.setFrom(files(classDirectories.files.collect {
         fileTree(dir: it, exclude: [
