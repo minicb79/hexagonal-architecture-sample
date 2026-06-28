@@ -1,13 +1,13 @@
-package com.example.myapp.order.adapter.out.client;
+package com.example.myapp.order.adapter.out.paymentsservice;
 
-import com.example.myapp.order.application.port.out.PaymentClientPort;
+import com.example.myapp.order.application.port.out.paymentsservice.PaymentClientPort;
 import com.example.myapp.order.domain.exception.PaymentSessionFailedException;
 import com.example.myapp.order.domain.model.CardDetails;
 import com.example.myapp.order.domain.model.PaymentSession;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import com.example.myapp.order.adapter.out.client.model.GatewaySessionRequest;
-import com.example.myapp.order.adapter.out.client.model.GatewaySessionResponse;
+import com.example.myapp.order.adapter.out.paymentsservice.model.GatewaySessionRequest;
+import com.example.myapp.order.adapter.out.paymentsservice.model.GatewaySessionResponse;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 

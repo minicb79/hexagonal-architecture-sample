@@ -1,4 +1,4 @@
-package com.example.myapp.order.adapter.out.client.model;
+package com.example.myapp.order.adapter.out.paymentsservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

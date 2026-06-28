@@ -1,4 +1,4 @@
-package com.example.myapp.order.application.port.out;
+package com.example.myapp.order.application.port.out.paymentsservice;
 
 import com.example.myapp.order.domain.model.CardDetails;
 import com.example.myapp.order.domain.model.PaymentSession;
