@@ -62,8 +62,12 @@ public class PaymentsServiceAdapter implements PaymentClientPort {
         if (throwable instanceof WebClientResponseException wcre) {
             return wcre.getStatusCode().is5xxServerError();
         }
-        return throwable instanceof java.io.IOException 
-                || throwable instanceof java.util.concurrent.TimeoutException;
+        Throwable cause = throwable;
+        if (throwable instanceof org.springframework.web.reactive.function.client.WebClientRequestException) {
+            cause = throwable.getCause();
+        }
+        return cause instanceof java.io.IOException 
+                || cause instanceof java.util.concurrent.TimeoutException;
     }
 
     /**

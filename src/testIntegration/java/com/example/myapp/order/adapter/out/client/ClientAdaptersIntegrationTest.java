@@ -203,4 +203,127 @@ class ClientAdaptersIntegrationTest {
         // Verify exactly 4 calls were made (1 initial + 3 retries)
         wireMockServer.verify(4, getRequestedFor(urlEqualTo("/cards/" + cardId)));
     }
+    @Test
+    void cardsAdapterShouldThrowExceptionWhenResponseIsEmpty() {
+        // GIVEN
+        String cardId = "empty-card";
+        wireMockServer.stubFor(get(urlEqualTo("/cards/" + cardId))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")));
+
+        // WHEN & THEN
+        PaymentSessionFailedException ex = assertThrows(
+                PaymentSessionFailedException.class,
+                () -> cardsAdapter.getCardDetails(cardId)
+        );
+        assertTrue(ex.getMessage().contains("empty response"));
+    }
+
+    @Test
+    void paymentsAdapterShouldThrowExceptionWhenResponseIsEmpty() {
+        // GIVEN
+        CardDetails card = CardDetails.builder()
+                .cardNumber("1234567890123456")
+                .expirationMonth("11")
+                .expirationYear("29")
+                .cvv("999")
+                .cardholderName("Alice Smith")
+                .build();
+        wireMockServer.stubFor(post(urlEqualTo("/sessions"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")));
+
+        // WHEN & THEN
+        PaymentSessionFailedException ex = assertThrows(
+                PaymentSessionFailedException.class,
+                () -> paymentsAdapter.createSession(card)
+        );
+        assertTrue(ex.getMessage().contains("empty response"));
+    }
+
+    @Test
+    void cardsAdapterShouldThrowExceptionWhenResponseIsMalformed() {
+        // GIVEN
+        String cardId = "malformed-card";
+        wireMockServer.stubFor(get(urlEqualTo("/cards/" + cardId))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{malformed-json}")));
+
+        // WHEN & THEN
+        PaymentSessionFailedException ex = assertThrows(
+                PaymentSessionFailedException.class,
+                () -> cardsAdapter.getCardDetails(cardId)
+        );
+        assertTrue(ex.getMessage().contains("Unexpected failure during card retrieval"));
+    }
+
+    @Test
+    void paymentsAdapterShouldThrowExceptionWhenResponseIsMalformed() {
+        // GIVEN
+        CardDetails card = CardDetails.builder()
+                .cardNumber("1234567890123456")
+                .expirationMonth("11")
+                .expirationYear("29")
+                .cvv("999")
+                .cardholderName("Alice Smith")
+                .build();
+        wireMockServer.stubFor(post(urlEqualTo("/sessions"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{malformed-json}")));
+
+        // WHEN & THEN
+        PaymentSessionFailedException ex = assertThrows(
+                PaymentSessionFailedException.class,
+                () -> paymentsAdapter.createSession(card)
+        );
+        assertTrue(ex.getMessage().contains("Unexpected failure during payment session creation"));
+    }
+
+    @Test
+    void cardsAdapterShouldRetryAndEventuallyThrowWhenConnectionFails() {
+        // GIVEN
+        String cardId = "fault-card";
+        wireMockServer.stubFor(get(urlEqualTo("/cards/" + cardId))
+                .willReturn(aResponse()
+                        .withFault(com.github.tomakehurst.wiremock.http.Fault.CONNECTION_RESET_BY_PEER)));
+
+        // WHEN & THEN
+        assertThrows(
+                PaymentSessionFailedException.class,
+                () -> cardsAdapter.getCardDetails(cardId)
+        );
+        
+        // Should retry 3 times (4 requests total) and throw the original cause
+        wireMockServer.verify(4, getRequestedFor(urlEqualTo("/cards/" + cardId)));
+    }
+
+    @Test
+    void paymentsAdapterShouldRetryAndEventuallyThrowWhenConnectionFails() {
+        // GIVEN
+        CardDetails card = CardDetails.builder()
+                .cardNumber("1234567890123456")
+                .expirationMonth("11")
+                .expirationYear("29")
+                .cvv("999")
+                .cardholderName("Alice Smith")
+                .build();
+        wireMockServer.stubFor(post(urlEqualTo("/sessions"))
+                .willReturn(aResponse()
+                        .withFault(com.github.tomakehurst.wiremock.http.Fault.CONNECTION_RESET_BY_PEER)));
+
+        // WHEN & THEN
+        assertThrows(
+                PaymentSessionFailedException.class,
+                () -> paymentsAdapter.createSession(card)
+        );
+
+        // Should retry 3 times (4 requests total) and throw the original cause
+        wireMockServer.verify(4, postRequestedFor(urlEqualTo("/sessions")));
+    }
 }
