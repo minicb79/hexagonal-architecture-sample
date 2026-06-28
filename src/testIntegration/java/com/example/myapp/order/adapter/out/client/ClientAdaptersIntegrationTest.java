@@ -96,7 +96,13 @@ class ClientAdaptersIntegrationTest {
     @Test
     void paymentsAdapterShouldCreateSessionSuccessfully() {
         // GIVEN
-        CardDetails cardDetails = new CardDetails("1234567890123456", "11", "29", "999", "Alice Smith");
+        CardDetails cardDetails = CardDetails.builder()
+                .cardNumber("1234567890123456")
+                .expirationMonth("11")
+                .expirationYear("29")
+                .cvv("999")
+                .cardholderName("Alice Smith")
+                .build();
         wireMockServer.stubFor(post(urlEqualTo("/sessions"))
                 .willReturn(aResponse()
                         .withStatus(201)
@@ -123,7 +129,13 @@ class ClientAdaptersIntegrationTest {
     @ValueSource(ints = {400, 401})
     void paymentsAdapterShouldTranslateDownstreamErrorsToPaymentSessionFailedExceptionAndNotRetry(int statusCode) {
         // GIVEN
-        CardDetails cardDetails = new CardDetails("1234567890123456", "11", "29", "999", "Alice Smith");
+        CardDetails cardDetails = CardDetails.builder()
+                .cardNumber("1234567890123456")
+                .expirationMonth("11")
+                .expirationYear("29")
+                .cvv("999")
+                .cardholderName("Alice Smith")
+                .build();
         wireMockServer.stubFor(post(urlEqualTo("/sessions"))
                 .willReturn(aResponse()
                         .withStatus(statusCode)

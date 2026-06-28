@@ -9,16 +9,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Driven adapter implementing CardClientPort using WebClient.
  */
+@RequiredArgsConstructor
 public class CardsServiceAdapter implements CardClientPort {
 
     private final WebClient webClient;
-
-    public CardsServiceAdapter(WebClient webClient) {
-        this.webClient = webClient;
-    }
 
     @Override
     public CardDetails getCardDetails(String cardId) {
@@ -36,13 +35,13 @@ public class CardsServiceAdapter implements CardClientPort {
                 throw new PaymentSessionFailedException("Received empty response from cards service.");
             }
 
-            return new CardDetails(
-                    response.cardNumber(),
-                    response.expirationMonth(),
-                    response.expirationYear(),
-                    response.cvv(),
-                    response.cardholderName()
-            );
+            return CardDetails.builder()
+                    .cardNumber(response.cardNumber())
+                    .expirationMonth(response.expirationMonth())
+                    .expirationYear(response.expirationYear())
+                    .cvv(response.cvv())
+                    .cardholderName(response.cardholderName())
+                    .build();
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new CardNotFoundException("Saved card with ID " + cardId + " not found.", e);

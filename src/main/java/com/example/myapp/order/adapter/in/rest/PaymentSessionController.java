@@ -14,17 +14,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.ZoneOffset;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Driving adapter (REST Controller) implementing the generated OpenAPI DefaultApi.
  */
 @RestController
+@RequiredArgsConstructor
 public class PaymentSessionController implements DefaultApi {
 
     private final CreatePaymentSessionUseCase createPaymentSessionUseCase;
-
-    public PaymentSessionController(CreatePaymentSessionUseCase createPaymentSessionUseCase) {
-        this.createPaymentSessionUseCase = createPaymentSessionUseCase;
-    }
 
     @Override
     public ResponseEntity<PaymentSessionResponse> createPaymentSession(CreateSessionRequest request) {
@@ -46,13 +45,13 @@ public class PaymentSessionController implements DefaultApi {
         CardDetails inlineDetails = null;
         if (request.getInlineCardDetails() != null) {
             InlineCardDetails inlineDto = request.getInlineCardDetails();
-            inlineDetails = new CardDetails(
-                    inlineDto.getCardNumber(),
-                    inlineDto.getExpirationMonth(),
-                    inlineDto.getExpirationYear(),
-                    inlineDto.getCvv(),
-                    inlineDto.getCardholderName()
-            );
+            inlineDetails = CardDetails.builder()
+                    .cardNumber(inlineDto.getCardNumber())
+                    .expirationMonth(inlineDto.getExpirationMonth())
+                    .expirationYear(inlineDto.getExpirationYear())
+                    .cvv(inlineDto.getCvv())
+                    .cardholderName(inlineDto.getCardholderName())
+                    .build();
         }
 
         return new CreatePaymentSessionCommand(cardType, request.getCardId(), inlineDetails);

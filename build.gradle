@@ -64,6 +64,9 @@ configurations {
 dependencies {
     // Import Spring Boot BOM Platform natively for dependency management
     implementation platform('org.springframework.boot:spring-boot-dependencies:3.3.5')
+    annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:3.3.5')
+    testAnnotationProcessor platform('org.springframework.boot:spring-boot-dependencies:3.3.5')
+    testIntegrationAnnotationProcessor platform('org.springframework.boot:spring-boot-dependencies:3.3.5')
 
     // Spring Boot & Web Starter
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -96,6 +99,14 @@ dependencies {
     runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.114.Final'
     runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.114.Final:osx-aarch_64'
     runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.114.Final:osx-x86_64'
+
+    // Lombok convenience annotation support
+    compileOnly 'org.projectlombok:lombok:1.18.46'
+    annotationProcessor 'org.projectlombok:lombok:1.18.46'
+    testCompileOnly 'org.projectlombok:lombok:1.18.46'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
+    testIntegrationCompileOnly 'org.projectlombok:lombok:1.18.46'
+    testIntegrationAnnotationProcessor 'org.projectlombok:lombok:1.18.46'
 }
 
 openApiGenerate {

@@ -1,10 +1,12 @@
 package com.example.myapp.order.domain.model;
 
 import java.time.Instant;
+import lombok.Builder;
 
 /**
  * Domain Entity representing a created payment session.
  */
+@Builder
 public record PaymentSession(
     String sessionId,
     String status,
