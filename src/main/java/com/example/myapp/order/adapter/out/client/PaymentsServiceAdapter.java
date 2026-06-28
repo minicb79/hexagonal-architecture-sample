@@ -6,9 +6,9 @@ import com.example.myapp.order.domain.model.CardDetails;
 import com.example.myapp.order.domain.model.PaymentSession;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.myapp.order.adapter.out.client.model.GatewaySessionRequest;
+import com.example.myapp.order.adapter.out.client.model.GatewaySessionResponse;
 import java.time.Instant;
-
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -62,27 +62,11 @@ public class PaymentsServiceAdapter implements PaymentClientPort {
         if (throwable instanceof WebClientResponseException wcre) {
             return wcre.getStatusCode().is5xxServerError();
         }
-        return throwable instanceof java.io.IOException 
-                || throwable instanceof java.util.concurrent.TimeoutException;
+        Throwable cause = throwable;
+        if (throwable instanceof org.springframework.web.reactive.function.client.WebClientRequestException) {
+            cause = throwable.getCause();
+        }
+        return cause instanceof java.io.IOException 
+                || cause instanceof java.util.concurrent.TimeoutException;
     }
-
-    /**
-     * Package-private DTO representing the downstream API payload.
-     */
-    record GatewaySessionRequest(
-            @JsonProperty("card_number") String cardNumber,
-            @JsonProperty("expiration_month") String expirationMonth,
-            @JsonProperty("expiration_year") String expirationYear,
-            @JsonProperty("cvv") String cvv,
-            @JsonProperty("cardholder_name") String cardholderName
-    ) {}
-
-    /**
-     * Package-private DTO representing the downstream API response.
-     */
-    record GatewaySessionResponse(
-            @JsonProperty("session_id") String sessionId,
-            @JsonProperty("status") String status,
-            @JsonProperty("expires_at") String expiresAt
-    ) {}
 }
