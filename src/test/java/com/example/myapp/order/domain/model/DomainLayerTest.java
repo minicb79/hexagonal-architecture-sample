@@ -13,9 +13,13 @@ class DomainLayerTest {
 
     @Test
     void shouldCreateCardDetailsSuccessfullyWhenParametersAreValid() {
-        CardDetails card = new CardDetails(
-            "1234567890123456", "12", "2030", "123", "John Doe"
-        );
+        CardDetails card = CardDetails.builder()
+                .cardNumber("1234567890123456")
+                .expirationMonth("12")
+                .expirationYear("2030")
+                .cvv("123")
+                .cardholderName("John Doe")
+                .build();
 
         assertEquals("1234567890123456", card.cardNumber());
         assertEquals("12", card.expirationMonth());
@@ -40,15 +44,39 @@ class DomainLayerTest {
     void shouldThrowExceptionWhenCardDetailsContainBlankOrNullValues(
             String number, String month, String year, String cvv, String holder) {
         assertThrows(IllegalArgumentException.class, () ->
-            new CardDetails(number, month, year, cvv, holder)
+            CardDetails.builder()
+                    .cardNumber(number)
+                    .expirationMonth(month)
+                    .expirationYear(year)
+                    .cvv(cvv)
+                    .cardholderName(holder)
+                    .build()
         );
     }
 
     @Test
     void cardDetailsShouldHaveValueObjectEqualityBehavior() {
-        CardDetails card1 = new CardDetails("1234567890123456", "12", "2030", "123", "John Doe");
-        CardDetails card2 = new CardDetails("1234567890123456", "12", "2030", "123", "John Doe");
-        CardDetails card3 = new CardDetails("9999999999999999", "12", "2030", "123", "John Doe");
+        CardDetails card1 = CardDetails.builder()
+                .cardNumber("1234567890123456")
+                .expirationMonth("12")
+                .expirationYear("2030")
+                .cvv("123")
+                .cardholderName("John Doe")
+                .build();
+        CardDetails card2 = CardDetails.builder()
+                .cardNumber("1234567890123456")
+                .expirationMonth("12")
+                .expirationYear("2030")
+                .cvv("123")
+                .cardholderName("John Doe")
+                .build();
+        CardDetails card3 = CardDetails.builder()
+                .cardNumber("9999999999999999")
+                .expirationMonth("12")
+                .expirationYear("2030")
+                .cvv("123")
+                .cardholderName("John Doe")
+                .build();
 
         assertEquals(card1, card2); // Equal values mean equal objects
         assertNotEquals(card1, card3);
@@ -58,7 +86,11 @@ class DomainLayerTest {
     @Test
     void shouldCreatePaymentSessionSuccessfullyWhenParametersAreValid() {
         Instant expiry = Instant.now().plusSeconds(3600);
-        PaymentSession session = new PaymentSession("session-id-123", "APPROVED", expiry);
+        PaymentSession session = PaymentSession.builder()
+                .sessionId("session-id-123")
+                .status("APPROVED")
+                .expiresAt(expiry)
+                .build();
 
         assertEquals("session-id-123", session.sessionId());
         assertEquals("APPROVED", session.status());
@@ -76,7 +108,11 @@ class DomainLayerTest {
             String id, String status, boolean hasExpiry) {
         Instant expiry = hasExpiry ? Instant.now() : null;
         assertThrows(IllegalArgumentException.class, () ->
-            new PaymentSession(id, status, expiry)
+            PaymentSession.builder()
+                    .sessionId(id)
+                    .status(status)
+                    .expiresAt(expiry)
+                    .build()
         );
     }
 

@@ -37,9 +37,11 @@ class PaymentSessionControllerTest {
     @MockBean
     private CreatePaymentSessionUseCase useCase;
 
-    private static final PaymentSession MOCK_SESSION = new PaymentSession(
-            "session-web-123", "APPROVED", Instant.parse("2030-01-01T12:00:00Z")
-    );
+    private static final PaymentSession MOCK_SESSION = PaymentSession.builder()
+            .sessionId("session-web-123")
+            .status("APPROVED")
+            .expiresAt(Instant.parse("2030-01-01T12:00:00Z"))
+            .build();
 
     @ParameterizedTest
     @MethodSource("provideValidRequests")

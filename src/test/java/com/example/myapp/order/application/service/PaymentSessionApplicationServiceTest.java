@@ -33,13 +33,19 @@ class PaymentSessionApplicationServiceTest {
     @InjectMocks
     private PaymentSessionApplicationService service;
 
-    private final CardDetails mockCard = new CardDetails(
-        "1234567890123456", "12", "28", "123", "John Doe"
-    );
+    private final CardDetails mockCard = CardDetails.builder()
+            .cardNumber("1234567890123456")
+            .expirationMonth("12")
+            .expirationYear("28")
+            .cvv("123")
+            .cardholderName("John Doe")
+            .build();
 
-    private final PaymentSession mockSession = new PaymentSession(
-        "session-abc-123", "APPROVED", Instant.now().plusSeconds(3600)
-    );
+    private final PaymentSession mockSession = PaymentSession.builder()
+            .sessionId("session-abc-123")
+            .status("APPROVED")
+            .expiresAt(Instant.now().plusSeconds(3600))
+            .build();
 
     @ParameterizedTest
     @EnumSource(value = CardType.class, names = {"SAVED_CARD", "AUTOPAY_CARD"})

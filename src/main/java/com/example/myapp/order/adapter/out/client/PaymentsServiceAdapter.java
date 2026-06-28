@@ -44,11 +44,11 @@ public class PaymentsServiceAdapter implements PaymentClientPort {
                 throw new PaymentSessionFailedException("Received empty response from payments service.");
             }
 
-            return new PaymentSession(
-                    response.sessionId(),
-                    response.status(),
-                    Instant.parse(response.expiresAt())
-            );
+            return PaymentSession.builder()
+                    .sessionId(response.sessionId())
+                    .status(response.status())
+                    .expiresAt(Instant.parse(response.expiresAt()))
+                    .build();
         } catch (WebClientResponseException e) {
             throw new PaymentSessionFailedException(
                     "Failed to create payment session from downstream gateway: [Status " + e.getStatusCode() + "] " + e.getResponseBodyAsString(), e

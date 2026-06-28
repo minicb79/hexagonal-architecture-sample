@@ -35,13 +35,13 @@ public class CardsServiceAdapter implements CardClientPort {
                 throw new PaymentSessionFailedException("Received empty response from cards service.");
             }
 
-            return new CardDetails(
-                    response.cardNumber(),
-                    response.expirationMonth(),
-                    response.expirationYear(),
-                    response.cvv(),
-                    response.cardholderName()
-            );
+            return CardDetails.builder()
+                    .cardNumber(response.cardNumber())
+                    .expirationMonth(response.expirationMonth())
+                    .expirationYear(response.expirationYear())
+                    .cvv(response.cvv())
+                    .cardholderName(response.cardholderName())
+                    .build();
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new CardNotFoundException("Saved card with ID " + cardId + " not found.", e);
