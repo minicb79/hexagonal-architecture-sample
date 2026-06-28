@@ -2,7 +2,6 @@
 
 plugins {
     id 'org.springframework.boot' version '3.3.0'
-    id 'io.spring.dependency-management' version '1.1.6'
     id 'java'
     id 'org.openapi.generator' version '7.1.0'
     id 'idea'
@@ -63,6 +62,9 @@ configurations {
 }
 
 dependencies {
+    // Import Spring Boot BOM Platform natively for dependency management
+    implementation platform('org.springframework.boot:spring-boot-dependencies:3.3.0')
+
     // Spring Boot & Web Starter
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
