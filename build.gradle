@@ -1,7 +1,7 @@
 
 
 plugins {
-    id 'org.springframework.boot' version '3.3.5'
+    id 'org.springframework.boot' version '4.1.0'
     id 'java'
     id 'org.openapi.generator' version '7.1.0'
     id 'idea'
@@ -50,7 +50,7 @@ sourceSets {
 // Ensure IntelliJ IDEA automatically detects and indexes generated sources
 idea {
     module {
-        generatedSourceDirs += file("$buildDir/generated-sources/openapi/src/main/java")
+        generatedSourceDirs.add(layout.buildDirectory.dir("generated-sources/openapi/src/main/java").get().asFile)
     }
 }
 
@@ -64,10 +64,10 @@ configurations {
 
 dependencies {
     // Import Spring Boot BOM Platform natively for dependency management
-    implementation platform('org.springframework.boot:spring-boot-dependencies:3.3.5')
-    annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:3.3.5')
-    testAnnotationProcessor platform('org.springframework.boot:spring-boot-dependencies:3.3.5')
-    testIntegrationAnnotationProcessor platform('org.springframework.boot:spring-boot-dependencies:3.3.5')
+    implementation platform('org.springframework.boot:spring-boot-dependencies:4.1.0')
+    annotationProcessor platform('org.springframework.boot:spring-boot-dependencies:4.1.0')
+    testAnnotationProcessor platform('org.springframework.boot:spring-boot-dependencies:4.1.0')
+    testIntegrationAnnotationProcessor platform('org.springframework.boot:spring-boot-dependencies:4.1.0')
 
     // Spring Boot & Web Starter
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -84,11 +84,11 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.19'
 
     // Unit & Integration Testing Dependencies
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'io.projectreactor:reactor-test'
     
     // ArchUnit library
-    testImplementation 'com.tngtech.archunit:archunit-junit5:1.1.0'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.2'
 
     // WireMock Standalone for Integration Tests (prevents Jetty version conflicts)
     testImplementation 'org.wiremock:wiremock-standalone:3.3.1'
@@ -113,7 +113,7 @@ dependencies {
 openApiGenerate {
     generatorName.set("spring")
     inputSpec.set("$projectDir/src/main/resources/contracts/payment-session-api.yaml")
-    outputDir.set("$buildDir/generated-sources/openapi")
+    outputDir.set(layout.buildDirectory.dir("generated-sources/openapi").map { it.asFile.absolutePath })
     apiPackage.set("com.example.myapp.order.adapter.in.rest.api")
     modelPackage.set("com.example.myapp.order.adapter.in.rest.dto")
     configOptions.set([

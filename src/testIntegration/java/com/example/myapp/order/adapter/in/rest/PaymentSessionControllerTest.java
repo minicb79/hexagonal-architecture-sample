@@ -1,21 +1,21 @@
 package com.example.myapp.order.adapter.in.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.myapp.order.adapter.in.rest.dto.CreateSessionRequest;
 import com.example.myapp.order.adapter.in.rest.dto.InlineCardDetails;
 import com.example.myapp.order.application.port.in.CreatePaymentSessionUseCase;
 import com.example.myapp.order.domain.exception.CardNotFoundException;
 import com.example.myapp.order.domain.exception.PaymentSessionFailedException;
 import com.example.myapp.order.domain.model.PaymentSession;
-import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+
 import java.time.Instant;
 import java.util.stream.Stream;
 
@@ -31,10 +31,9 @@ class PaymentSessionControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @MockBean
+    @MockitoBean
     private CreatePaymentSessionUseCase useCase;
 
     private static final PaymentSession MOCK_SESSION = PaymentSession.builder()
